@@ -67,6 +67,7 @@ features = ["parallel", "simd-stable", "serde-serialize", "debug-render"]
 [lib]
 name = "rapier3d"
 path = "../../src/lib.rs"
+crate-type = ["cdylib", "rlib"]
 required-features = ["dim3", "f32"]
 
 

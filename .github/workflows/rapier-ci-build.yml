@@ -93,6 +93,39 @@ jobs:
         run: cd crates/rapier2d && cargo build --verbose --target wasm32-unknown-emscripten --features simd-stable;
       - name: build rapier3d --features simd-stable
         run: cd crates/rapier3d && cargo build --verbose --target wasm32-unknown-emscripten --features simd-stable;
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust targets
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+      - name: Build Android (aarch64)
+        run: |
+          cargo ndk -t arm64-v8a -p rapier3d -- build --release
+          cargo ndk -t arm64-v8a -p rapier2d -- build --release
+      - name: Build Android (armv7)
+        run: |
+          cargo ndk -t armeabi-v7a -p rapier3d -- build --release
+          cargo ndk -t armeabi-v7a -p rapier2d -- build --release
+      - name: Build Android (x86_64)
+        run: |
+          cargo ndk -t x86_64 -p rapier3d -- build --release
+          cargo ndk -t x86_64 -p rapier2d -- build --release
+      - name: Build Android (x86)
+        run: |
+          cargo ndk -t x86 -p rapier3d -- build --release
+          cargo ndk -t x86 -p rapier2d -- build --release
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-libs
+          path: |
+            target/aarch64-linux-android/release/*.so
+            target/armv7-linux-androideabi/release/*.so
+            target/x86_64-linux-android/release/*.so
+            target/i686-linux-android/release/*.so
   # If this fails, consider changing your text or adding something to .typos.toml
   # You can find typos here: https://crates.io/crates/typos'
   typos:

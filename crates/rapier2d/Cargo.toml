@@ -63,6 +63,7 @@ features = ["parallel", "simd-stable", "serde-serialize", "debug-render"]
 [lib]
 name = "rapier2d"
 path = "../../src/lib.rs"
+crate-type = ["cdylib", "rlib"]
 required-features = ["dim2", "f32"]
 doctest = false # All doctests are written assuming the 3D version.
 
